@@ -25,10 +25,10 @@
                     </form>
                     <div class="picture-loader-form hidden-form">
                         <div class="picture-loader-result"></div>
-                        {{-- <div class="minimo-text-input">
-                            <input required type="text" class="pl-title" style="display: none;">
+                        <div class="minimo-text-input" style="display: none;">
+                            <input required type="text" class="pl-title" >
                             <span>Title</span>
-                        </div> --}}
+                        </div>
                         <div class="minimo-text-input">
                             <input required type="text" class="pl-alt">
                             <span>Alt</span>
@@ -111,21 +111,31 @@
             })
         </script>
     </div>
+
+
+
+
+
+
+
+
     <div class="container">
         <form action="{{route('create-post')}}" method="post" class="creator" enctype="multipart/form-data">
             @csrf
             <h1>A new post</h1>
+            <input type="hidden" name="parent" value="{{ $parent }}">
             <div class="meta-field">
                 <div class="row">
-                    <div class="meta-title minimo-text-input">
+                    <div class="minimo-text-input">
+                        <input required type="text" name="id">
+                        <span>id</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="minimo-text-input">
                         <input required type="text" name="title">
                         <span>Title</span>
                     </div>
-                    <select class="meta-category" name="category">
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
                 </div>
                 <div class="row">
                     <div class="minimo-text-input">

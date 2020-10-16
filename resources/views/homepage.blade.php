@@ -9,12 +9,7 @@
     </div>
     <div class="container">
         <article class="article-short">
-            <a href="{{$pages[0]->category}}">
-                <h3>
-                    {{$pages[0]->category_name}}
-                </h3>
-            </a>
-            <a href="{{route('post', ['id' => $pages[0]->id])}}">
+            <a href="{{route('page', ['id' => $pages[0]->id])}}">
                 <h2>
                     {{$pages[0]->title}}
                 </h2>
@@ -23,14 +18,14 @@
                 {{$pages[0]->short}}<br/><br/>
                 {{$pages[0]->created}}
             </p>
-            <a href="{{route('post', ['id' => $pages[0]->id])}}" class="more">Leave a comment</a>
+            <a href="{{route('page', ['id' => $pages[0]->id])}}" class="more">Leave a comment</a>
         </article>
     </div>
 </div>
 <div class="container">
     <div class="post-tiles">
         <?php
-            $other = array_slice($pages->getArrayCopy(), 1);
+            $other = array_slice($pages->toArray(), 1);
             $itemsPerRow = 2;
         ?>
         @for($i = 0; $i < sizeof($other); $i += $itemsPerRow)
@@ -39,12 +34,7 @@
                     @if ($j < sizeof($other))
                         <article class="article-short">
                             <img src="{{asset("public/images/".$other[$j]->image)}}" alt="">
-                            <a href="#">
-                                <h3>
-                                    {{$other[$j]->category_name}}
-                                </h3>
-                            </a>
-                            <a href="{{route('post', ['id' => $other[$j]->id])}}">
+                            <a href="{{route('page', ['id' => $other[$j]->id])}}">
                                 <h2>
                                     {{$other[$j]->title}}
                                 </h2>

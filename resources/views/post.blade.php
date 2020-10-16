@@ -6,11 +6,14 @@
 </div>
 <div class="container">
     <article class="article-short">
-        <a href="#">
-            <h3>
-                {{$post->category_name}}
-            </h3>
-        </a>
+        <h3>
+            <div class="breadCrumbs">
+                <a href="{{route('homepage')}}">Home</a>
+                @foreach ($breadCrumbs as $crumb)
+                > <a href="{{route('page', ['id' => $crumb->id])}}">{{ $crumb->title }}</a> 
+                @endforeach
+            </div>
+        </h3>
         <h2>
             {{$post->title}}
         </h2>

@@ -17,7 +17,7 @@
 
 <body>
 
-    <section class="leaves">
+    {{-- <section class="leaves">
         <div class="part">
             <div><img src="{{ asset('public/assets/images/leaves/leaves1.png') }}" alt=""></div>
             <div><img src="{{ asset('public/assets/images/leaves/leaves2.png') }}" alt=""></div>
@@ -48,7 +48,7 @@
             <div><img src="{{ asset('public/assets/images/leaves/leaves3.png') }}" alt=""></div>
             <div><img src="{{ asset('public/assets/images/leaves/leaves4.png') }}" alt=""></div>
         </div>
-    </section>
+    </section> --}}
 
     <header>
         <div class="container-wide">
@@ -57,7 +57,7 @@
                 <nav class="header-menu">
                     <ul>
                         @foreach ($categories as $cat)
-                            <li><a href="{{ $cat->id }}">{{ $cat->name }}</a></li>
+                            <li><a href="{{ $cat->id }}">{{ $cat->title }}</a></li>
                         @endforeach
                     </ul>
                 </nav>

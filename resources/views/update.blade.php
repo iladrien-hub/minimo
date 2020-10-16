@@ -118,15 +118,10 @@
             <input type="text" name="id" value="{{ $post->id }}" hidden="true">   
             <div class="meta-field">
                 <div class="row">
-                    <div class="meta-title minimo-text-input">
+                    <div class="minimo-text-input">
                         <input required type="text" name="title" value="{{ $post->title }}">
                         <span>Title</span>
                     </div>
-                    <select class="meta-category" name="category" value="{{ $post->category }}">
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
                 </div>
                 <div class="row">
                     <div class="minimo-text-input">
