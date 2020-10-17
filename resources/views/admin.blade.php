@@ -91,6 +91,7 @@
                     <td></td>
                     <td>Title</td>
                     <td>Short</td>
+                    <td>Sort order</td>
                     <td>Created</td>
                     <td>Updated</td>
                     <td>Actions</td>
@@ -105,6 +106,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 </tr>
                 @foreach ($pages as $item)
                     @if (!$item->isContainer)
@@ -114,7 +116,8 @@
                         <td>{{$item->id}}</td>
                         <td><i class="fas fa-folder"></i></td>
                         <td><a href="{{route('admin', ['id' => $item->id])}}" style="text-decoration: underline;">{{$item->title}}</a></td>
-                        <td>{{$item->short}}</td>
+                        <td></td>
+                        <td>{{$item->sortOrder}}</td>
                         <td>{{$item->created}}</td>
                         <td>{{$item->updated}}</td>
                         <td>
@@ -133,6 +136,7 @@
                         <td><i class="fas fa-file"></i></td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->short}}</td>
+                        <td></td>
                         <td>{{$item->created}}</td>
                         <td>{{$item->updated}}</td>
                         <td>
