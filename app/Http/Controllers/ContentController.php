@@ -61,6 +61,10 @@ class ContentController extends Controller
         return redirect()->route('admin', [ 'id' => $request->input('parent') ]);
     }
 
+    public function addAlias(Request $request) {
+
+    }
+
     public function categoryControl(Request $request) {
         $id = $request->input("id");
         $allowUpdate = $request->input("allowUpdate") == "1";
@@ -72,9 +76,9 @@ class ContentController extends Controller
                     "updated" => now(),
                     "sortOrder" => $request->input("sortOrder")
                 ]);
-                return response()->json(["result" => true, "msg" => "done"], 200);
+                return response()->json(["status" => true, "message" => "done"], 200);
             }
-            return response()->json(["result" => false, "msg" => "Such an id is not exists"], 200);
+            return response()->json(["status" => false, "message" => "Such an id is not exists"], 200);
         } else {
             if (sizeof($idCheck) == 0) {
                 DB::table('pages')->insert([
@@ -84,9 +88,9 @@ class ContentController extends Controller
                     "isContainer" => true,
                     "sortOrder" => $request->input("sortOrder")
                 ]);
-                return response()->json(["result" => true, "msg" => "done"], 200);
+                return response()->json(["status" => true, "message" => "done"], 200);
             }
-            return response()->json(["result" => false, "msg" => "Such an id already exists"], 200);
+            return response()->json(["status" => false, "message" => "Such an id already exists"], 200);
         }
     }
 

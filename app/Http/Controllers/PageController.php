@@ -24,18 +24,6 @@ class PageController extends Controller
         return array_reverse($res->getArrayCopy());
     }
 
-    private function getPagesArray($parent) {
-        $parent = DB::table('pages')->where("id", $parent)->get();
-        if (sizeof($parent) > 0){
-            $parent = $parent[0];
-            $resp = DB::table('pages')->
-                where("parent", $parent->id)->orderBy($parent->sortOrder, 'desc')->
-                where("id", "!=", "root")->get();
-            return $resp;
-        }
-        return new ArrayObject();
-    }
-
     private function getPage($id) {
         $resp =  DB::table('pages')->where("id", $id)->get();
         if (sizeof($resp) < 1) {
@@ -55,7 +43,11 @@ class PageController extends Controller
     public function homepage() {
         return view('homepage', [
             'categories' => $this->getContentCategories(),
-            'pages' => $resp = DB::table('pages')->where("isContainer", "false")->orderBy("updated", "desc")->get()
+            'pages' => DB::table('pages')->
+                where("isContainer", "false")->
+                where("aliasTo", null)->
+                orderBy("updated", "desc")->
+                get()
         ]);
     }
 
@@ -80,13 +72,8 @@ class PageController extends Controller
         if ($page->isContainer) {
             return view('container', [
                 'categories' => $this->getContentCategories(),
-                'childs' =>  DB::table('pages')->
-                                where("isContainer", "1")->
-                                where("parent", $id)->get(),
-                'articles' =>  DB::table('pages')->
-                                where("isContainer", "0")->
-                                where("parent", $id)->
-                                orderBy($page->sortOrder)->get(),
+                'subDirectories' =>  Page::getPages($id),
+                'articles' => Page::getPages($id),
                 'breadCrumbs' => $this->getBreadCrumbs($id),
                 'page' => $page
             ]);
@@ -101,7 +88,7 @@ class PageController extends Controller
     public function adminPanel($dir) {
         return view('admin', [
             'categories' => $this->getContentCategories(),
-            'pages' => $this->getPagesArray($dir),
+            'pages' => Page::getPages($dir),
             'dir' => $dir,
             'parent' => $this->getPageParent($dir),
             'breadCrumbs' => $this->getBreadCrumbs($dir)
