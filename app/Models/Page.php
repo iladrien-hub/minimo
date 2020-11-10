@@ -11,13 +11,15 @@ class Page extends Model {
 
     public $id, $title, $image, $short, $content, $created, $updated, $isContainer, $sortOrder;
     public $isAlias = false;
+    public $aliasId;
 
     public function __construct($source) {
         if ($source->aliasTo != null) {
             $aliasTarget = DB::table('pages')->where("id", $source->aliasTo)->first();
             $this->id = $source->aliasTo;
+            $this->aliasId = $source->id;
             $this->title = $source->title ?? $aliasTarget->title;
-            $this->image = $source->image ?? $aliasTarget->image;
+            $this->image = $source->image;
             $this->short = $source->short ?? $aliasTarget->short;
             $this->content = $aliasTarget->content;
             $this->created = $aliasTarget->created;

@@ -31,6 +31,7 @@ class ContentController extends Controller
             $this->dropPages($child->id);
         }
         $image = $this->imageFolder().$item->image;
+        DB::table('pages')->where('aliasTo', '=', $id)->delete();
         DB::table('pages')->where('id', '=', $id)->delete();
         $this->deleteFile($image);
     }
@@ -59,10 +60,6 @@ class ContentController extends Controller
             "parent" => $request->input('parent')
         ]);
         return redirect()->route('admin', [ 'id' => $request->input('parent') ]);
-    }
-
-    public function addAlias(Request $request) {
-
     }
 
     public function categoryControl(Request $request) {
@@ -121,4 +118,30 @@ class ContentController extends Controller
         $parent = DB::table('pages')->where('id', $id)->get()[0]->parent;
         return redirect()->route('admin', [ "id" => $parent ]);
     }
+
+    public function addAlias(Request $request) {
+        $aliasTo = $request->input('aliasTo');
+        $post = DB::table('pages')->where('id', $aliasTo)->get();
+        if (sizeof($post) == 0) {
+            return response()->json(["status" => false, "message" => "Page '".$aliasTo."' was not found."], 200);
+        }
+        DB::table('pages')->insert([
+            "id" => uniqid(),
+            "parent" => $request->input("parent"),
+            "title" => $request->input("newTitle"),
+            "short" => $request->input("newShort"),
+            "aliasTo" => $request->input("aliasTo")
+        ]);
+        return response()->json(["status" => true, "message" => "Success!"], 200);
+    }
+
+    public function updateAlias(Request  $request) {
+        $aliasId = $request->input('aliasId');
+        DB::table('pages')->where("id", $aliasId)->update([
+            "title" => $request->input("newTitle"),
+            "short" => $request->input("newShort")
+        ]);
+        return response()->json(["status" => true, "message" => "Success!"], 200);
+    }
+
 }

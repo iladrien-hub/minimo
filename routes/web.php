@@ -23,6 +23,10 @@ Route::get('/create-post/{id}', ['as' => 'newpost', 'uses' => '\App\Http\Control
 
 Route::post('/add-category', ['as' => 'add-category', 'uses' => '\App\Http\Controllers\ContentController@categoryControl']);
 
+Route::post('/get-pages-like', ['as' => 'get-pages-like', 'uses' => '\App\Http\Controllers\PageController@getPagesLike']);
+Route::post('/add-alias', ['as' => 'add-alias', 'uses' => '\App\Http\Controllers\ContentController@addAlias']);
+Route::post('/update-alias', ['as' => 'update-alias', 'uses' => '\App\Http\Controllers\ContentController@updateAlias']);
+
 Route::post('/create-post-commit', ['as' => 'create-post', 'uses' => '\App\Http\Controllers\ContentController@addPost']);
 Route::post('/update-post-commit', ['as' => 'update-post', 'uses' => '\App\Http\Controllers\ContentController@updatePost']);
 Route::post('/upload-image', ['as' => 'upload-image', 'uses' => '\App\Http\Controllers\ContentController@uploadImage']);

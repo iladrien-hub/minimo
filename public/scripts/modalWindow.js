@@ -2,9 +2,15 @@
 class AbstractField {
     constructor() {
         this.content = $("")
+        this.parent = null
     }
-    getContent() {
-        return this.content
+    append(parent) {
+        this.content = this.content.appendTo(parent)
+        return this
+    }
+    set_parent(parent) {
+        this.parent = parent
+        return this
     }
 }
 
@@ -15,6 +21,10 @@ class MinimoTextInput extends AbstractField {
             '   <input required type="text" name=' + options.name + '>\n' +
             '   <span>' + options.title + '</span>\n' +
             '</div>')
+    }
+    required(val) {
+        this.content.find('input').prop( "required", val )
+        return this
     }
 }
 
@@ -29,6 +39,77 @@ class MinimoSelect extends AbstractField {
     option(key, value) {
         this.content.append('<option value=' + key + '>' + value + '</option>')
         return this
+    }
+}
+
+class MinimoPageSelect extends AbstractField {
+    constructor(options) {
+        super();
+        const _thisRef = this
+        this.csrf = ""
+        this.route = ""
+        this.content = $(
+            '<div class="minimo-text-input" style="margin-bottom: -15px;">' +
+            '   <input class="minimo-page-select-input" autocomplete = "off" placeholder="Start typing to search..." type="text" name=' + options.name + '>' +
+            '</div>' +
+            '<div class="pages-select-list">' +
+            '</div>'
+        )
+        this.content.find('.minimo-page-select-input').keyup(function (event) {
+            _thisRef.sendRequest($(this).val())
+        })
+    }
+
+    set_csrf(val) {
+        this.csrf = val
+        return this
+    }
+
+    set_route(val) {
+        this.route = val
+        return this
+    }
+
+    sendRequest(text) {
+        const _thisRef = this
+        const fd = new FormData();
+        fd.append("_token", this.csrf)
+        fd.append("title", text)
+        $.ajax({
+            url: this.route,
+            type: "POST",
+            data: fd,
+            success: function (data) {
+                _thisRef.parent.modal.find('.pages-select-list').html("")
+                _thisRef.parent.modal.find('input[name="aliasTo"]').val("")
+                for (let page in data["pages"]) {
+                    const title = data["pages"][page]["title"]
+                    const id = data["pages"][page]["id"]
+                    const item = $('<div class="pages-list-item" pageid='+ id +'>'+ title +' - '+ id +' </div>')
+                        .click(function (){
+                            $(this).parent().find(".pages-list-item").removeClass("selected")
+                            $(this).addClass("selected")
+                            _thisRef.parent.modal.find('input[name="aliasTo"]').val($(this).attr("pageid"))
+                        })
+                    _thisRef.parent.modal.find('.pages-select-list').append(item)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+}
+
+class MinimoTextArea extends AbstractField {
+    constructor(options) {
+        super();
+        this.content = $("" +
+            "<div class=\"minimo-text-input\" style='margin-bottom: 15px'>\n" +
+            "   <textarea name="+ options.name +" type=\"textarea\" rows=\"3\" class=\"pl-caption\"></textarea>\n" +
+            "   <span>"+ options.title +"</span>\n" +
+            "</div>")
     }
 }
 
@@ -72,7 +153,8 @@ class ModalWindow {
         return this
     }
     appendField(field) {
-        this.modal.find('.modal-form').append(field.getContent())
+        field.append(this.modal.find('.modal-form'))
+        field.set_parent(this)
         return this
     }
     addSubmit() {
@@ -90,6 +172,7 @@ class ModalWindow {
         return this
     }
     clear() {
+        this.modal.find(".error-message").addClass("inactive")
         this.modal.find("input:not([type=hidden])").val("")
     }
     commit() {

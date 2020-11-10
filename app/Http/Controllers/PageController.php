@@ -95,4 +95,17 @@ class PageController extends Controller
         ]);
     }
 
+    public function getPagesLike(Request $request) {
+        $pages = DB::table('pages')->
+            where('title', 'LIKE', $request->input('title').'%')->
+            where("isContainer", "==", false)->
+            get();
+        $res = new ArrayObject();
+        foreach ($pages as $page) {
+            if ($page->aliasTo != null)
+                continue;
+            $res->append( [ "title" => $page->title, "id" => $page->id ] );
+        }
+        return response()->json(["pages" =>$res ], 200);
+    }
 }
